@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, world!");
+    apheleia_core::setup();
 }
