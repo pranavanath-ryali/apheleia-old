@@ -5,7 +5,7 @@ Apheleia is a rust toolkit for constructing TUIs
 
 # Roadmap
 - [ ] apheleia-core
-    - [ ] Buffer
+    - [X] Buffer
     - [ ] DiffBuffer
     - [ ] Renderer
         - [ ] diff-buffer rendering

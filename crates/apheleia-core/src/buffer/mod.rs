@@ -34,11 +34,17 @@ impl Buffer {
         self.cells[y][x].c
     }
 
-    pub fn set(&mut self, x: usize, y: usize, c: char) {
+    fn set(&mut self, x: usize, y: usize, c: char) {
         if x >= self.width || y >= self.height {
             return;
         }
 
         self.cells[y][x] = Cell { c };
+    }
+
+    pub fn write_line(&mut self, start_pos_x: usize, start_pos_y: usize, text: &str) {
+        for (i, c) in text.chars().enumerate() {
+            self.set(start_pos_x + i, start_pos_y, c);
+        }
     }
 }

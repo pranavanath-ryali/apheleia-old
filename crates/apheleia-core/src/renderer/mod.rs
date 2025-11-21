@@ -19,7 +19,7 @@ impl Renderer {
         Self { stdout }
     }
 
-    pub fn flip(mut self, buf: &mut Buffer) {
+    pub fn flip(&mut self, buf: &mut Buffer) {
         execute!(self.stdout, Clear(crossterm::terminal::ClearType::All));
 
         for i in 0..(buf.height) {
@@ -33,11 +33,5 @@ impl Renderer {
         }
 
         self.stdout.flush();
-    }
-}
-
-impl Default for Renderer {
-    fn default() -> Self {
-        Self::new()
     }
 }
