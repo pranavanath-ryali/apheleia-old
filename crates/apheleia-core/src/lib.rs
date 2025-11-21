@@ -1,3 +1,7 @@
+pub mod buffer;
+pub mod renderer;
+
+use crate::{buffer::Buffer, renderer::Renderer};
 use crossterm::{
     ExecutableCommand, QueueableCommand, cursor, queue,
     style::{self, Stylize},
@@ -5,34 +9,44 @@ use crossterm::{
 };
 use std::io::{Write, stdout};
 
-mod buffer;
-
 pub fn setup() {
-    let size = terminal::size();
-    if let Ok(s) = size {
-        println!("{} {}", s.0, s.1);
+    let size = terminal::size().unwrap();
+    let mut buf = Buffer::new_fill(size.0 as usize, size.1 as usize, 'a');
+    let renderer = Renderer::new();
 
-        let mut stdout = stdout();
+    renderer.flip(&mut buf);
 
-        stdout.execute(Clear(terminal::ClearType::All));
+    // stdout.execute(Clear(terminal::ClearType::All));
+    //
+    // for i in 0..(size.0) {
+    //     for j in 0..(size.1) {
+    //         stdout.execute(cursor::MoveTo(0, 0));
+    //     }
+    // }
 
-        for i in 0..(s.0 - 0) {
-            // queue!(
-            //     stdout,
-            //     cursor::MoveTo(i, 0),
-            //     style::PrintStyledContent("2".red())
-            // );
-            for j in 0..(s.1 - 0) {
-                queue!(
-                    stdout,
-                    cursor::MoveTo(i, j),
-                    style::PrintStyledContent("2".red())
-                );
-            }
-        }
-
-        stdout.flush();
-    }
+    //     println!("{} {}", s.0, s.1);
+    //
+    //     let mut stdout = stdout();
+    //
+    //     stdout.execute(Clear(terminal::ClearType::All));
+    //
+    //     for i in 0..(s.0 - 0) {
+    //         // queue!(
+    //         //     stdout,
+    //         //     cursor::MoveTo(i, 0),
+    //         //     style::PrintStyledContent("2".red())
+    //         // );
+    //         for j in 0..(s.1 - 0) {
+    //             queue!(
+    //                 stdout,
+    //                 cursor::MoveTo(i, j),
+    //                 style::PrintStyledContent("2".red())
+    //             );
+    //         }
+    //     }
+    //
+    //     stdout.flush();
+    // }
     // stdout
     //     .queue(Clear(terminal::ClearType::All));
     //
