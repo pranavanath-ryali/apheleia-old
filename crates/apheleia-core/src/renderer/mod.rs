@@ -1,7 +1,7 @@
-use std::io::{Cursor, Stdout, Write, stdout};
+use std::io::{Stdout, Write, stdout};
 
 use crossterm::{
-    ExecutableCommand, cursor, execute, queue,
+    cursor, execute, queue,
     style::{PrintStyledContent, Stylize},
     terminal::Clear,
 };
@@ -33,5 +33,11 @@ impl Renderer {
         }
 
         self.stdout.flush();
+    }
+}
+
+impl Default for Renderer {
+    fn default() -> Self {
+        Self::new()
     }
 }

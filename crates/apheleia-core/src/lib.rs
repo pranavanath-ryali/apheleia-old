@@ -2,12 +2,9 @@ pub mod buffer;
 pub mod renderer;
 
 use crate::{buffer::Buffer, renderer::Renderer};
-use crossterm::{
-    ExecutableCommand, QueueableCommand, cursor, queue,
-    style::{self, Stylize},
-    terminal::{self, Clear},
-};
-use std::io::{Write, stdout};
+use crossterm::
+    terminal::{self}
+;
 
 pub fn setup() {
     let size = terminal::size().unwrap();
