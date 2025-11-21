@@ -5,6 +5,8 @@ use crossterm::{
 };
 use std::io::{Write, stdout};
 
+mod buffer;
+
 pub fn setup() {
     let size = terminal::size();
     if let Ok(s) = size {
@@ -14,17 +16,6 @@ pub fn setup() {
 
         stdout.execute(Clear(terminal::ClearType::All));
 
-        // queue!(
-        //     stdout,
-        //     cursor::MoveTo(3, 0),
-        //     style::PrintStyledContent("A".red())
-        // );
-        // queue!(
-        //     stdout,
-        //     cursor::MoveTo(5, 0),
-        //     style::PrintStyledContent("123".red())
-        // );
-        //
         for i in 0..(s.0 - 0) {
             // queue!(
             //     stdout,
@@ -46,15 +37,4 @@ pub fn setup() {
     //     .queue(Clear(terminal::ClearType::All));
     //
     // queue!(stdout, cursor::MoveTo(5, 5));
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
 }
