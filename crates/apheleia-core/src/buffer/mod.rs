@@ -7,6 +7,7 @@ pub struct Buffer {
     pub width: usize,
     pub height: usize,
     cells: Vec<Vec<Cell>>,
+    updated_cells: Vec<(usize, usize, char)>
 }
 
 impl Buffer {
@@ -17,6 +18,7 @@ impl Buffer {
             width,
             height,
             cells: vec![vec![default_cell; width]; height],
+            updated_cells: vec![]
         }
     }
 
@@ -27,6 +29,7 @@ impl Buffer {
             width,
             height,
             cells: vec![vec![default_cell; width]; height],
+            updated_cells: vec![]
         }
     }
 
@@ -40,11 +43,20 @@ impl Buffer {
         }
 
         self.cells[y][x] = Cell { c };
+        self.updated_cells.push((x, y, c));
     }
 
     pub fn write_line(&mut self, start_pos_x: usize, start_pos_y: usize, text: &str) {
         for (i, c) in text.chars().enumerate() {
             self.set(start_pos_x + i, start_pos_y, c);
         }
+    }
+
+    pub fn get_update_list(&mut self) -> &Vec<(usize, usize, char)> {
+        &self.updated_cells
+    }
+
+    pub fn clear_update_list(&mut self) {
+        self.updated_cells.clear();
     }
 }

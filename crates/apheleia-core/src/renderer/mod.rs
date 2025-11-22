@@ -33,5 +33,19 @@ impl Renderer {
         }
 
         self.stdout.flush();
+        buf.clear_update_list();
+    }
+
+    pub fn update(&mut self, buf: &mut Buffer) {
+        for cell in buf.get_update_list() {
+            queue!(
+                self.stdout,
+                cursor::MoveTo(cell.0 as u16, cell.1 as u16),
+                PrintStyledContent(cell.2.white())
+            );
+        }
+        
+        self.stdout.flush();
+        buf.clear_update_list();
     }
 }
