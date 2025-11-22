@@ -14,7 +14,8 @@ pub struct Renderer {
 
 impl Renderer {
     pub fn new() -> Self {
-        let stdout = stdout();
+        let mut stdout = stdout();
+        execute!(stdout, cursor::Hide);
 
         Self { stdout }
     }
@@ -47,5 +48,9 @@ impl Renderer {
         
         self.stdout.flush();
         buf.clear_update_list();
+    }
+
+    pub fn quit(&mut self) {
+        execute!(self.stdout, cursor::Show);
     }
 }

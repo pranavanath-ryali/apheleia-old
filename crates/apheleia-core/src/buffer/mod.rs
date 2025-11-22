@@ -4,55 +4,55 @@ struct Cell {
 }
 
 pub struct Buffer {
-    pub width: usize,
-    pub height: usize,
+    pub width: u16,
+    pub height: u16,
     cells: Vec<Vec<Cell>>,
-    updated_cells: Vec<(usize, usize, char)>
+    updated_cells: Vec<(u16, u16, char)>
 }
 
 impl Buffer {
-    pub fn new(width: usize, height: usize) -> Self {
+    pub fn new(width: u16, height: u16) -> Self {
         let default_cell = Cell { c: ' ' };
 
         Self {
             width,
             height,
-            cells: vec![vec![default_cell; width]; height],
+            cells: vec![vec![default_cell; width as usize]; height as usize],
             updated_cells: vec![]
         }
     }
 
-    pub fn new_fill(width: usize, height: usize, c: char) -> Self {
+    pub fn new_fill(width: u16, height: u16, c: char) -> Self {
         let default_cell = Cell { c };
 
         Self {
             width,
             height,
-            cells: vec![vec![default_cell; width]; height],
+            cells: vec![vec![default_cell; width as usize]; height as usize],
             updated_cells: vec![]
         }
     }
 
-    pub fn get(&mut self, x: usize, y: usize) -> char {
-        self.cells[y][x].c
+    pub fn get(&mut self, x: u16, y: u16) -> char {
+        self.cells[y as usize][x as usize].c
     }
 
-    fn set(&mut self, x: usize, y: usize, c: char) {
+    fn set(&mut self, x: u16, y: u16, c: char) {
         if x >= self.width || y >= self.height {
             return;
         }
 
-        self.cells[y][x] = Cell { c };
+        self.cells[y as usize][x as usize] = Cell { c };
         self.updated_cells.push((x, y, c));
     }
 
-    pub fn write_line(&mut self, start_pos_x: usize, start_pos_y: usize, text: &str) {
+    pub fn write_line(&mut self, start_pos_x: u16, start_pos_y: u16, text: &str) {
         for (i, c) in text.chars().enumerate() {
-            self.set(start_pos_x + i, start_pos_y, c);
+            self.set(start_pos_x + (i as u16), start_pos_y, c);
         }
     }
 
-    pub fn get_update_list(&mut self) -> &Vec<(usize, usize, char)> {
+    pub fn get_update_list(&mut self) -> &Vec<(u16, u16, char)> {
         &self.updated_cells
     }
 
