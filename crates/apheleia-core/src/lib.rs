@@ -1,6 +1,8 @@
 pub mod buffer;
 pub mod renderer;
 
+use std::thread::{sleep, sleep_ms};
+
 use crate::{buffer::Buffer, renderer::Renderer};
 use crossterm::
     terminal::{self}
