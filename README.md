@@ -4,9 +4,10 @@ In Greek Mythology, __Apheleia__ was the spirit and personification of simplicit
 Apheleia is a rust toolkit for constructing TUIs
 
 # Roadmap
-- [ ] apheleia-core
+- [X] apheleia-core
     - [X] Buffer
-    - [X] DiffBuffer
     - [X] Renderer
-        - [X] diff-buffer rendering
+        - [X] update only changed parts of buffer
+    - [ ] Styled Text. Support for fg, bg, and decorations.
+- [ ] apheleia
 - [ ] _add more tasks_

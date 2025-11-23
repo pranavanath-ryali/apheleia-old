@@ -11,8 +11,8 @@ pub fn setup() {
     let mut buf = Buffer::new_fill(size.0 - 10, size.1 - 20, 'c');
     let mut renderer = Renderer::new();
 
-    buf.write_line(0, 0, "+");
-    buf.write_line(10, 3, "Hello World!");
+    buf.write_line(0, 0, "♥");
+    buf.write_line(10, 3, "♥ Hello World!");
 
     renderer.flip(&mut buf);
     
