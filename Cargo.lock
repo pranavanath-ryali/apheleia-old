@@ -12,6 +12,9 @@ dependencies = [
 [[package]]
 name = "apheleia-ui"
 version = "0.1.0"
+dependencies = [
+ "apheleia-core",
+]
 
 [[package]]
 name = "bitflags"
@@ -272,6 +275,9 @@ dependencies = [
 [[package]]
 name = "ui-hello-world"
 version = "0.1.0"
+dependencies = [
+ "apheleia-ui",
+]
 
 [[package]]
 name = "unicode-ident"
