@@ -2,11 +2,14 @@ use std::io::{Stdout, Write, stdout};
 
 use crossterm::{
     cursor, execute, queue,
-    style::{PrintStyledContent, Stylize},
+    style::{
+        Attribute, Color, PrintStyledContent, SetAttributes, SetBackgroundColor,
+        SetForegroundColor, StyledContent, Stylize,
+    },
     terminal::Clear,
 };
 
-use crate::buffer::Buffer;
+use crate::{buffer::Buffer, style::Style};
 
 pub struct Renderer {
     stdout: Stdout,
@@ -23,12 +26,18 @@ impl Renderer {
     pub fn flip(&mut self, buf: &mut Buffer) {
         execute!(self.stdout, Clear(crossterm::terminal::ClearType::All));
 
-        for i in 0..(buf.height) {
-            for j in 0..(buf.width) {
+        for y in 0..(buf.height) {
+            for x in 0..(buf.width) {
+                let cell = buf.get(x, y);
                 queue!(
                     self.stdout,
-                    cursor::MoveTo(j as u16, i as u16),
-                    PrintStyledContent(buf.get(j, i).white())
+                    cursor::MoveTo(x as u16, y as u16),
+                    PrintStyledContent(
+                        cell.c
+                            .with(cell.style.fg)
+                            .on(cell.style.bg)
+                            .attribute(cell.style.attrs.unwrap_or_else(|| { Attribute::Reset }))
+                    )
                 );
             }
         }
@@ -38,14 +47,21 @@ impl Renderer {
     }
 
     pub fn update(&mut self, buf: &mut Buffer) {
-        for cell in buf.get_update_list() {
+        for pos in buf.get_update_list() {
+            let cell = buf.get(pos.0, pos.1);
+
             queue!(
                 self.stdout,
-                cursor::MoveTo(cell.0 as u16, cell.1 as u16),
-                PrintStyledContent(cell.2.white())
+                cursor::MoveTo(pos.0 as u16, pos.1 as u16),
+                PrintStyledContent(
+                    cell.c
+                        .with(cell.style.fg)
+                        .on(cell.style.bg)
+                        .attribute(cell.style.attrs.unwrap_or_else(|| { Attribute::Reset }))
+                )
             );
         }
-        
+
         self.stdout.flush();
         buf.clear_update_list();
     }
