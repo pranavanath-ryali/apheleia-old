@@ -54,8 +54,6 @@ impl RootNode {
             }
         }
 
-        println!("Id: {}", new_node.id);
-
         self.nodes.insert(new_node.id, new_node);
     }
 }
