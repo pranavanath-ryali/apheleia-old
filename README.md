@@ -8,6 +8,6 @@ Apheleia is a rust toolkit for constructing TUIs
     - [X] Buffer
     - [X] Renderer
         - [X] update only changed parts of buffer
-    - [ ] Styled Text. Support for fg, bg, and decorations.
+    - [X] Styled Text. Support for fg, bg, and decorations.
 - [ ] apheleia
 - [ ] _add more tasks_
