@@ -4,7 +4,7 @@ use crate::{
     FAKE_NODEID, MAX_NODES, NodeId,
     node::{BasicNode, Node},
 };
-use apheleia_core::{buffer::Buffer, renderer::Renderer, terminal};
+use apheleia_core::{buffer::{Buffer, NodeBuffer}, renderer::Renderer, terminal};
 
 // TODO: Implement Terminal. Make these private
 pub struct RootNode {
@@ -43,21 +43,21 @@ impl RootNode {
     }
 
     pub fn add_node(&mut self, node: BasicNode) {
-        // let mut new_node = node.clone();
-        // if new_node.id == FAKE_NODEID {
-        //     let id = self.get_id();
-        //     if let Some(id) = id {
-        //         new_node.id = id;
-        //     } else {
-        //         return
-        //     }
-        // }
-
         if let Some(id) = self.get_id() {
             self.nodes.insert(
                 id,
                 node.clone()
             );
         }
+    }
+
+    pub fn start(&mut self) {
+        for (id, node) in self.nodes.iter_mut() {
+            let mut node_buffer = NodeBuffer::new(node.width, node.height);
+            node.render(&mut node_buffer);
+            self.buffer.render_node_buffer(node.x, node.y, &node_buffer);
+        }
+
+        self.renderer.flip(&mut self.buffer);
     }
 }

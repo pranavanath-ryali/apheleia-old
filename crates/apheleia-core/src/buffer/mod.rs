@@ -70,6 +70,15 @@ impl Buffer {
         }
     }
 
+    pub fn render_node_buffer(&mut self, start_pos_x: u16, start_pos_y: u16, buf: &NodeBuffer) {
+        for y in 0..buf.height{
+            for x in 0..buf.width {
+                let cell: &Cell = buf.get(x, y);
+                self.set(start_pos_x + x, start_pos_y + y, cell.c, cell.style);
+            }
+        }
+    }
+
     pub fn get_update_list(&self) -> Vec<(u16, u16)> {
         self.updated_cells.clone()
     }

@@ -34,9 +34,9 @@ impl Node for BasicNode {
                 buf.write_line(
                     x,
                     y,
-                    " ",
+                    "A",
                     Some(Style {
-                        bg: Color::White,
+                        fg: Color::Blue,
                         ..Default::default()
                     }),
                 );
