@@ -1,7 +1,10 @@
-use std::collections::{HashMap, VecDeque};
+use std::{collections::{HashMap, VecDeque}, sync::Arc};
 
+use crate::{
+    FAKE_NODEID, MAX_NODES, NodeId,
+    node::{BasicNode, Node},
+};
 use apheleia_core::{buffer::Buffer, renderer::Renderer, terminal};
-use crate::{FAKE_NODEID, MAX_NODES, NodeId, node::Node};
 
 // TODO: Implement Terminal. Make these private
 pub struct RootNode {
@@ -9,9 +12,9 @@ pub struct RootNode {
     height: u16,
 
     available_nodeIds: VecDeque<NodeId>,
-    nodes: HashMap<NodeId, Node>,
+    nodes: HashMap<NodeId, BasicNode>,
 
-    main_buffer: Buffer,
+    buffer: Buffer,
     renderer: Renderer,
 }
 impl RootNode {
@@ -30,7 +33,7 @@ impl RootNode {
             available_nodeIds,
             nodes: HashMap::new(),
 
-            main_buffer: Buffer::new(size.0, size.1),
+            buffer: Buffer::new(size.0, size.1),
             renderer: Renderer::new(),
         }
     }
@@ -39,17 +42,22 @@ impl RootNode {
         self.available_nodeIds.pop_front()
     }
 
-    pub fn add_node(&mut self, node: Node) {
-        let mut new_node = node.clone();
-        if new_node.id == FAKE_NODEID {
-            let id = self.get_id();
-            if let Some(id) = id {
-                new_node.id = id;
-            } else {
-                return
-            }
-        }
+    pub fn add_node(&mut self, node: BasicNode) {
+        // let mut new_node = node.clone();
+        // if new_node.id == FAKE_NODEID {
+        //     let id = self.get_id();
+        //     if let Some(id) = id {
+        //         new_node.id = id;
+        //     } else {
+        //         return
+        //     }
+        // }
 
-        self.nodes.insert(new_node.id, new_node);
+        if let Some(id) = self.get_id() {
+            self.nodes.insert(
+                id,
+                node.clone()
+            );
+        }
     }
 }

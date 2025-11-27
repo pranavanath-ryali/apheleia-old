@@ -1,8 +1,12 @@
-use apheleia_core::buffer::Buffer;
 use crate::{FAKE_NODEID, NodeId};
+use apheleia_core::{Color, buffer::NodeBuffer, style::Style};
+
+pub trait Node {
+    fn render(&self, buf: &mut NodeBuffer);
+}
 
 #[derive(Clone, Copy)]
-pub struct Node {
+pub struct BasicNode {
     pub id: NodeId,
 
     pub x: u16,
@@ -12,12 +16,31 @@ pub struct Node {
     pub height: u16,
 }
 
-impl Node {
-    pub fn render(buf: &mut Buffer) {}
-}
-
-impl Default for Node {
+impl Default for BasicNode {
     fn default() -> Self {
-        Self { id: FAKE_NODEID, x: 0, y: 0, width: 1, height: 1 }
+        Self {
+            id: FAKE_NODEID,
+            x: 0,
+            y: 0,
+            width: 1,
+            height: 1,
+        }
+    }
+}
+impl Node for BasicNode {
+    fn render(&self, buf: &mut NodeBuffer) {
+        for x in 0..self.width {
+            for y in 0..self.height {
+                buf.write_line(
+                    x,
+                    y,
+                    " ",
+                    Some(Style {
+                        bg: Color::White,
+                        ..Default::default()
+                    }),
+                );
+            }
+        }
     }
 }

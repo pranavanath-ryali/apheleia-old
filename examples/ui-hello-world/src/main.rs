@@ -1,9 +1,10 @@
-use apheleia_ui::{Node, RootNode};
+use apheleia_ui::{node::{BasicNode, Node}, rootnode::RootNode};
+
 
 fn main() {
     let mut root = RootNode::new();
 
-    let node = Node {
+    let node = BasicNode {
         ..Default::default()
     };
 
