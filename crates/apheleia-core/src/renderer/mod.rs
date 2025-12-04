@@ -45,21 +45,34 @@ impl Renderer {
         self.stdout.flush();
         buf.clear_update_list();
     }
-
+    
+    // FIXME: working of attributes
     pub fn update(&mut self, buf: &mut Buffer) {
         for pos in buf.get_update_list() {
             let cell = buf.get(pos.0, pos.1);
 
-            queue!(
-                self.stdout,
-                cursor::MoveTo(pos.0 as u16, pos.1 as u16),
-                PrintStyledContent(
-                    cell.c
-                        .with(cell.style.fg)
-                        .on(cell.style.bg)
-                        .attribute(cell.style.attrs.unwrap_or_else(|| { Attribute::Reset }))
-                )
-            );
+            if let Some(attr) = cell.style.attrs {
+                queue!(
+                    self.stdout,
+                    cursor::MoveTo(pos.0 as u16, pos.1 as u16),
+                    PrintStyledContent(
+                        cell.c
+                            .with(cell.style.fg)
+                            .on(cell.style.bg)
+                            .attribute(attr)
+                    )
+                );
+            } else {
+                queue!(
+                    self.stdout,
+                    cursor::MoveTo(pos.0 as u16, pos.1 as u16),
+                    PrintStyledContent(
+                        cell.c
+                            .with(cell.style.fg)
+                            .on(cell.style.bg)
+                    )
+                );
+            }
         }
 
         self.stdout.flush();

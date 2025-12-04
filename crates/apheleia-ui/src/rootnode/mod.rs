@@ -12,7 +12,8 @@ pub struct RootNode {
     height: u16,
 
     available_nodeIds: VecDeque<NodeId>,
-    nodes: HashMap<NodeId, BasicNode>,
+    nodes: HashMap<NodeId, BasicNode>, // TODO: Find a viable solution to store Node trait rather than
+                                       // just Node
 
     buffer: Buffer,
     renderer: Renderer,

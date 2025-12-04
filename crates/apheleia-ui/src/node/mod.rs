@@ -1,5 +1,5 @@
 use crate::{FAKE_NODEID, NodeId};
-use apheleia_core::{Color, buffer::NodeBuffer, style::Style};
+use apheleia_core::{Attribute, Color, buffer::NodeBuffer, style::Style};
 
 pub trait Node {
     fn render(&self, buf: &mut NodeBuffer);

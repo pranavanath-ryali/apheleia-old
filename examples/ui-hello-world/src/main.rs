@@ -14,5 +14,14 @@ fn main() {
     };
 
     root.add_node(node);
+    let node = BasicNode {
+        x: 20,
+        y: 30,
+
+        width: 10,
+        height: 3,
+        ..Default::default()
+    };
+    root.add_node(node);
     root.start();
 }
