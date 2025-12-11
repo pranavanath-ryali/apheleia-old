@@ -1,12 +1,17 @@
 use crate::{FAKE_NODEID, NodeId};
-use apheleia_core::{Attribute, Color, buffer::NodeBuffer, style::Style};
+use apheleia_core::{Color, buffer::NodeBuffer, style::Style};
 
-pub trait Node {
+pub trait NodeTrait {
+    fn get_x(&self) -> u16;
+    fn get_y(&self) -> u16;
+
+    fn get_width(&self) -> u16;
+    fn get_height(&self) -> u16;
+
     fn render(&self, buf: &mut NodeBuffer);
 }
 
-#[derive(Clone, Copy)]
-pub struct BasicNode {
+pub struct Node {
     pub id: NodeId,
 
     pub x: u16,
@@ -16,7 +21,7 @@ pub struct BasicNode {
     pub height: u16,
 }
 
-impl Default for BasicNode {
+impl Default for Node {
     fn default() -> Self {
         Self {
             id: FAKE_NODEID,
@@ -27,20 +32,23 @@ impl Default for BasicNode {
         }
     }
 }
-impl Node for BasicNode {
+impl NodeTrait for Node {
+    fn get_x(&self) -> u16 {
+        self.x
+    }
+    fn get_y(&self) -> u16 {
+        self.y
+    }
+
+    fn get_width(&self) -> u16 {
+        self.width
+    }
+    fn get_height(&self) -> u16 {
+        self.height
+    }
+
     fn render(&self, buf: &mut NodeBuffer) {
-        for x in 0..self.width {
-            for y in 0..self.height {
-                buf.write_line(
-                    x,
-                    y,
-                    "A",
-                    Some(Style {
-                        fg: Color::Blue,
-                        ..Default::default()
-                    }),
-                );
-            }
-        }
+        buf.write_line(0, 0, "A".repeat(self.width as usize).as_str(),  Some(Style::default()));
+        buf.write_line(0, self.height - 1, "A".repeat(self.width as usize).as_str(),  Some(Style::default()));
     }
 }
