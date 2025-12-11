@@ -1,55 +1,65 @@
-use std::collections::{HashMap, VecDeque};
+use std::{
+    collections::{HashMap, VecDeque},
+    sync::Arc,
+};
 
-use apheleia_core::{buffer::Buffer, renderer::Renderer, terminal};
-use crate::{FAKE_NODEID, MAX_NODES, NodeId, node::Node};
+use crate::{
+    FAKE_NODEID, MAX_NODES, NodeId,
+    node::{Node, NodeTrait},
+};
+use apheleia_core::{
+    buffer::{Buffer, NodeBuffer},
+    renderer::Renderer,
+    terminal,
+};
 
-// TODO: Implement Terminal. Make these private
 pub struct RootNode {
     width: u16,
     height: u16,
 
-    available_nodeIds: VecDeque<NodeId>,
-    nodes: HashMap<NodeId, Node>,
+    available_node_ids: VecDeque<NodeId>,
+    nodes: HashMap<NodeId, Box<dyn NodeTrait>>,
 
-    main_buffer: Buffer,
+    buffer: Buffer,
     renderer: Renderer,
 }
 impl RootNode {
     pub fn new() -> Self {
         let size = terminal::size().unwrap();
 
-        let mut available_nodeIds: VecDeque<NodeId> = VecDeque::new();
+        let mut available_node_ids: VecDeque<NodeId> = VecDeque::new();
         for i in 1..MAX_NODES {
-            available_nodeIds.push_back(i);
+            available_node_ids.push_back(i);
         }
 
         Self {
             width: size.0,
             height: size.1,
 
-            available_nodeIds,
+            available_node_ids,
             nodes: HashMap::new(),
 
-            main_buffer: Buffer::new(size.0, size.1),
+            buffer: Buffer::new(size.0, size.1),
             renderer: Renderer::new(),
         }
     }
 
     fn get_id(&mut self) -> Option<NodeId> {
-        self.available_nodeIds.pop_front()
+        self.available_node_ids.pop_front()
     }
 
-    pub fn add_node(&mut self, node: Node) {
-        let mut new_node = node.clone();
-        if new_node.id == FAKE_NODEID {
-            let id = self.get_id();
-            if let Some(id) = id {
-                new_node.id = id;
-            } else {
-                return
-            }
+    pub fn add_node(&mut self, node: Box<dyn NodeTrait>) {
+        let id = self.get_id().unwrap();
+        self.nodes.insert(id, node);
+    }
+
+    pub fn start(&mut self) {
+        for (id, node) in self.nodes.iter_mut() {
+            let mut node_buffer = NodeBuffer::new(node.get_width(), node.get_height());
+            node.render(&mut node_buffer);
+            self.buffer.render_node_buffer(node.get_x(), node.get_y(), &node_buffer);
         }
 
-        self.nodes.insert(new_node.id, new_node);
+        self.renderer.flip(&mut self.buffer);
     }
 }
